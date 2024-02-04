@@ -1,0 +1,113 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>INP Generator</title>
+  <link rel="stylesheet" href="css/style.css">
+  <meta name="description" content="Testing INP in a lab setting">
+
+  <meta property="og:title" content="INP Generator">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="">
+
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.png">
+
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#fafafa">
+</head>
+
+<body>
+
+<main class="center-details">
+  <h1>Interaction to Next Paint (INP) Responsiveness Test</h1>
+  <details>
+    <summary id="click">Open/Close to Interact to Next Paint</summary>
+    <p>When this element was opened it ran functions generating extra activity that could cause a long task even on a relatively powerful device</p>    
+    <ul>
+      <li>An INP below or at 200 milliseconds means that your page has good responsiveness.</li>
+      <li>An INP above 200 milliseconds and below or at 500 milliseconds means that your page's responsiveness needs improvement.</li>
+      <li>An INP above 500 milliseconds means that your page has poor responsiveness..</li>
+      </ul>     
+    <p>What is going on here? Let's take a look in the code and performance tab</p>
+    <p>INP is calculated by the longest of the interactions in the current lifecycle of the page, essentially its slowest reaction</p>
+  </details>
+  <h1 id="INP">Current INP score: 0</h1>
+  <h2 id="score">
+    Random Activity Score: 0
+  </h2>
+  <div class="slidecontainer">
+    <label for="myRange">Slide to increase JavaScript activity and reopen or close.</label>
+    <input type="range" min="1" max="4" value="0" class="slider" id="myRange">
+  </div> 
+  </main>
+  <script src="js/app.js"></script>
+  <script src="https://unpkg.com/web-vitals@3/dist/web-vitals.iife.js"></script>
+  <script>
+      function updateINPUI(score) {
+        document.getElementById('INP').textContent = `Current INP score: ${score}`;
+      }
+      webVitals.onINP(
+          metric => updateINPUI(metric.value),
+          { reportAllChanges: true }
+      );
+  </script>
+  <script>
+    let score = 0;
+    const cookie = document.getElementById('click');
+    cookie.addEventListener('pointerdown', changeCookieColor);
+    cookie.addEventListener('click', increaseScoreMoreRandom);
+
+function updateScoreUI() {
+  performance.mark('scoreStart');
+  document.getElementById('score').textContent = `Random Activity Score: ${score.toFixed(2)}`;
+  performance.measure('RunUpdateScoreUI', 'scoreStart');
+}
+
+function increaseScoreOnClick() {
+  performance.mark('increaseStart');
+  score += 1;
+  updateScoreUI();
+  performance.measure('RunIncreaseScoreOnClick', 'increaseStart');
+}
+
+function increaseScoreMoreRandom() {
+  performance.mark('randomStart');
+  let range = document.getElementById('myRange').value;
+  let newRand, newRand1, newRand2, newRand3 = Math.random();
+  for (let i = 0; i < 10000000; i++) {
+    newRand = 1 + Math.random();
+  }
+  if(range >= 2) {
+    for (let i = 0; i < 10000000; i++) {
+      newRand1 = 1 + Math.random();
+    }
+  }
+  if(range >= 3) {
+    for (let i = 0; i < 10000000; i++) {
+      newRand2 = 1 + Math.random();
+    }
+  }
+  if(range >= 4) {
+    for (let i = 0; i < 10000000; i++) {
+      newRand3 = 1 + Math.random();
+    }
+  }
+  score += newRand;
+  updateScoreUI();
+  performance.measure('RunIncreaseScoreMoreRandom', 'randomStart');
+}
+
+function changeCookieColor() {
+  performance.mark('colorStart');
+  document.querySelector('details').style.filter = `hue-rotate(${Math.floor(Math.random() * 360)}deg)`;
+  performance.measure('RunChangeCookieColor', 'colorStart');
+}
+  </script>
+
+</body>
+
+</html>

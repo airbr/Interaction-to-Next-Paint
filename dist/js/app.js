@@ -1,0 +1,1 @@
+(()=>{var e=document.querySelector("details");e.addEventListener("toggle",(o=>{e.open?console.log("Open"):console.log("CLOSED")}))})();
